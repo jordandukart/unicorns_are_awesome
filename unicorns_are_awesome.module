@@ -1,5 +1,43 @@
 <?php
 /**
+ * @file
+ * Example module to demonstrate Islandora metadata display viewer framework.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function unicorns_are_awesome_theme() {
+  return array(
+    'unicorns_are_awesome_display' => array(
+      'file' => 'theme/theme.inc',
+      'template' => 'theme/unicorns-are-awesome-display-template',
+      // We can add PIDs to the end of this pattern in our preprocess function
+      // and templates will be able to have have a pid appended to the
+      // template name to overide a template on a per object basis.
+      // An example template might be named:
+      // "unicorns-are-awesome-display-template--islandora-27.tpl.php".
+      'pattern' => 'unicorns_are_awesome_display_template__',
+      'variables' => array(
+        'islandora_object' => NULL,
+        'print' => NULL,
+      ),
+    ),
+    'unicorns_are_awesome_description' => array(
+      'file' => 'theme/theme.inc',
+      'template' => 'theme/unicorns-are-awesome-description-template',
+      // We can add PIDs to the end of this pattern in our preprocess function
+      // and templates will be able to have have a pid appended to the
+      // template name to overide a template on a per object basis.
+      // An example template might be named:
+      // "unicorns-are-awesome-description-template--islandora-27.tpl.php".
+      'pattern' => 'unicorns_are_awesome_description_template__',
+      'variables' => array('islandora_object' => NULL),
+    ),
+  );
+}
+
+/**
  * Implements hook_islandora_metadata_display_info().
  */
 function unicorns_are_awesome_islandora_metadata_display_info() {
@@ -7,24 +45,65 @@ function unicorns_are_awesome_islandora_metadata_display_info() {
     'unicorns' => array(
       'label' => t('Unicorns'),
       'description' => t('Sparkly pink unicorns for metadata'),
-      'metadata callback' => 'unicorns_are_awesome_callback',
+      'metadata callback' => 'unicorns_are_awesome_display_callback',
       'description callback' => 'unicorns_are_awesome_description_callback',
     ),
   );
 }
 
-function unicorns_are_awesome_callback(AbstractObject $object) {
-  $markup = array(
-    '#prefix' => '<marquee behavior="scroll" direction="left">',
-    '#suffix' => '</marquee>',
-    '#markup' => theme_image(array(
-      'path' => 'http://s2.favim.com/orig/28/glitter-rainbow-unicorn-Favim.com-237329.gif',
-      'attributes' => array(),
-    )),
-  );
-  return drupal_render($markup);
+/**
+ * Metadata display callback for rendering metadata from unicorns.
+ *
+ * @param AbstractObject $object
+ *   An AbstractObject representing an object within Fedora.
+ * @param bool $print
+ *   Whether this is for printing purposes.
+ *
+ * @return string
+ *   Markup representing the metadata display pulled from unicorns.
+ */
+function unicorns_are_awesome_display_callback(AbstractObject $object, $print = FALSE) {
+  // For example purposes of the object is not a basic image let's theme it
+  // instead.
+  if (in_array('islandora:sp_basic_image', $object->models)) {
+    $markup = array(
+      '#prefix' => '<marquee behavior="scroll" direction="left">',
+      '#suffix' => '</marquee>',
+      '#markup' => theme('image', array(
+        'path' => drupal_get_path('module', 'unicorns_are_awesome') . '/images/sparkly_unicorn.gif',
+        'attributes' => array(),
+      )),
+    );
+    return drupal_render($markup);
+  }
+  else {
+    $elements = array(
+      'islandora_object' => $object,
+      'print' => $print,
+    );
+    return theme('unicorns_are_awesome_display', $elements);
+  }
 }
 
+/**
+ * Metadata display callback for rendering metadata from unicorns.
+ *
+ * @param AbstractObject $object
+ *   An AbstractObject representing an object within Fedora.
+ *
+ * @return string
+ *   Markup representing the metadata display pulled from unicorns.
+ */
 function unicorns_are_awesome_description_callback(AbstractObject $object) {
-  return t('Some awesome description yay');
+  // For example purposes of the object is not a basic image let's theme it
+  // instead.
+  if (in_array('islandora:sp_basic_image', $object->models)) {
+    return t('Some awesome description ya!');
+  }
+  else {
+    $elements = array(
+      'islandora_object' => $object,
+    );
+    return theme('unicorns_are_awesome_description', $elements);
+  }
 }
