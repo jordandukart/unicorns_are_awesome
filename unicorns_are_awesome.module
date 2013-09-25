@@ -1,0 +1,30 @@
+<?php
+/**
+ * Implements hook_islandora_metadata_display_info().
+ */
+function unicorns_are_awesome_islandora_metadata_display_info() {
+  return array(
+    'unicorns' => array(
+      'label' => t('Unicorns'),
+      'description' => t('Sparkly pink unicorns for metadata'),
+      'metadata callback' => 'unicorns_are_awesome_callback',
+      'description callback' => 'unicorns_are_awesome_description_callback',
+    ),
+  );
+}
+
+function unicorns_are_awesome_callback(AbstractObject $object) {
+  $markup = array(
+    '#prefix' => '<marquee behavior="scroll" direction="left">',
+    '#suffix' => '</marquee>',
+    '#markup' => theme_image(array(
+      'path' => 'http://s2.favim.com/orig/28/glitter-rainbow-unicorn-Favim.com-237329.gif',
+      'attributes' => array(),
+    )),
+  );
+  return drupal_render($markup);
+}
+
+function unicorns_are_awesome_description_callback(AbstractObject $object) {
+  return t('Some awesome description yay');
+}

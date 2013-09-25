@@ -1,0 +1,9 @@
+name = Unicorns are Awesome
+dependencies[] = islandora
+dependencies[] = islandora_solr
+dependencies[] = islandora_solr_metadata
+description = Awesome unicorn display for metadata
+package = Islandora
+version = 7.x-dev
+core = 7.x
+
