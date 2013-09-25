@@ -18,6 +18,7 @@ Download and enable the module.
 
 CONFIGURATION
 -------------
+The Unicorns Are Awesome module is used by selecting it to be the default metadata display viewer at "your_site/admin/islandora/metadata".
 
 CUSTOMIZATION
 -------------
