@@ -10,7 +10,8 @@
  */
 function unicorns_are_awesome_preprocess_unicorns_are_awesome_display(array &$variables) {
   $object = $variables['islandora_object'];
-  if (islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $object['DC'])) {
+  $dc = FALSE;
+  if (isset($object['DC']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $object['DC'])) {
     try {
       $dc = $object['DC']->content;
     }
